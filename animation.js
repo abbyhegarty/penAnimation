@@ -14,8 +14,8 @@ function(err)
     })
  
     
-    var screen = {width:400, height:500}
-    var margins = {top:10,right:50,bottom:50,left:50}
+    var screen = {width:800, height:800}
+    var margins = {top:50,right:50,bottom:50,left:50}
     
     var setup = function(data)
     {        
