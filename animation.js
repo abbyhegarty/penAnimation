@@ -3,15 +3,19 @@ var penPromise = d3.json("penguins/classData.json")
 penPromise.then(
 function(data)
     {
-        ev(data);
-        getDay(data);
+       // ev(data);
+       // getDay(data);
+        setup(data);
         console.log("Penguins",data);
+   
     },
 function(err)
     {
         console.log("ERROR",err);
     })
 
+
+/*
 var getGrade = function(quiz)
 {
     return quiz.grade;
@@ -72,14 +76,14 @@ var ev = function(data)
     var dayCounter = d3.select("body")
         .select("#dayCount")
         .text("Day 1")
+        */
        
-    
     //////////////////////////////////////////////////
     
     var screen = {width:400, height:500}
     var margins = {top:10,right:50,bottom:50,left:50}
     
-    var setup = function(points)
+    var setup = function(data)
     {
                 
        
@@ -124,8 +128,80 @@ var ev = function(data)
     
 }
     
-   var drawGraph = function(points,xScale,yScale)
+   var drawArray = function(data,xScale,yScale)
     {
+         var arrays = d3.select("#graph")
+    .selectAll("g")
+    .data(data)
+    .enter()
+    .append("g")
+    .attr("fill", "none")
+    .attr("stroke", "gray")      
+    .attr("stroke-width", 1)
+      
+       var arrays = d3.select("#graph") 
+       .selectAll("circle")
+       .data(data)
+       .enter()
+       .append("circle")
+       .attr("fill", "blue")
+        /*function(trash)
+             {
+           
+           return cScale(data) //change I think
+       }) */
+      .attr("cx",function(num,index)
+        {
+           return xScale(index)  //change 
+       }) 
+       .attr("cy",function(num)
+        {
+           return yScale(num) //change
+       })
+       .attr("r", 7)
+         
+         
+   /*      
+     //mouse    
+    .on("mouseover", function(data)
+        {
+        d3.select(this)
+        .attr("stroke", "red")
+        .attr("stroke-width", 10)
+        .raise(this);
+        
+    })
+      //mouse   
+    .on("mouseout", function(data)
+        {
+        d3.select(this)
+        .attr("stroke", "gray")
+        .attr("stroke-width", 1)
+    })
+    */
+   
+/*
+//make a line
+var lineGenerator = d3.line()
+    .x(function(num,index){return xScale(index)})
+    .y(function(num){return yScale(num)})
+    .curve(d3.curveNatural)
+*/
+       
+       
+arrays.datum(function(obj)
+
+{
+    return obj.quizes.map(function(d){return d.grade;});
+})
+    
+    .append("path")  
+    .attr("d", lineGenerator);
+    
+} 
+
+        
+        /*
         d3.select("svg")
         .selectAll("circle")
         .data(points)
@@ -139,23 +215,26 @@ var ev = function(data)
            {
                 d3.select("body").select("#pen").text("Penguin: " + d.x)
                 d3.select("body").select("#quiz").text("Quiz Grade: " + d.y)
-           })
-    }
+            */
+       
+      
+    
+  /*  //draws start graph
+    setup(pointsFunc(data,startDay));
+    var xScale = setup(pointsFunc(data,startDay)).xscale;
+    var yScale = setup(pointsFunc(data,startDay)).yscale;
+    drawGraph(pointsFunc(data,startDay),xScale,yScale);
+    
     
     //draws start graph
     setup(pointsFunc(data,startDay));
     var xScale = setup(pointsFunc(data,startDay)).xscale;
     var yScale = setup(pointsFunc(data,startDay)).yscale;
     drawGraph(pointsFunc(data,startDay),xScale,yScale);
-    }
     
-    //draws start graph
-    setup(pointsFunc(data,startDay));
-    var xScale = setup(pointsFunc(data,startDay)).xscale;
-    var yScale = setup(pointsFunc(data,startDay)).yscale;
-    drawGraph(pointsFunc(data,startDay),xScale,yScale);
+    */
     
-    var prevButton = d3.select("#prev")
+  /*  var prevButton = d3.select("#prev")
         .on("click", function(d)
             {
                 var numDay = trackDay(-1)
@@ -176,6 +255,7 @@ var ev = function(data)
                         .text("Day " + displayDay)
             })
     
+    
     var nextButton = d3.select("#next")
         .on("click", function(d)
             {
@@ -195,6 +275,7 @@ var ev = function(data)
 
                     d3.select("#dayCount")
                         .text("Day " + displayDay)
-            })
+            }) 
+            */
 
 
