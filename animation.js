@@ -3,8 +3,7 @@ var penPromise = d3.json("penguins/classData.json")
 penPromise.then(
 function(data)
     {
-       // ev(data);
-       // getDay(data);
+    
         setup(data);
         console.log("Penguins",data);
    
@@ -13,80 +12,14 @@ function(err)
     {
         console.log("ERROR",err);
     })
-
-
-/*
-var getGrade = function(quiz)
-{
-    return quiz.grade;
-}
-
-var getDay = function(data)
-{
-    return data[0].quizes.map(days);
-}
-
-var days = function(penguin)
-{
-    return penguin.day;
-}
-
-var startDay = 0;
-
-var trackDay = function(change)
-{
-    day = startDay + change;
-    startDay = day;
-    return day;
-}
-
-var ev = function(data)
-{
-    var numPen = []
-    for (i=0; i < data.length; i++)
-        {
-            numPen.push(i);
-        }
-    
-    var getQuiz = function(data,num)
-    {
-        return data[num].quizes.map(getGrade);
-    }
-    
-    var fullArray = [] //array of quizzes
-        for (i=0; i < 23; i++)
-            {
-                var num = i
-                var step = getQuiz(data,num)
-                fullArray.push(step);
-            }
-        
-    var pointsFunc = function(data,begDay)
-    {    
-        var xs = numPen;
-
-        var points = xs.map(
-            function(x)
-            {
-                return {x:x, y:fullArray[x][begDay]}
-            })
-        return points
-    }
-    
-    var dayCounter = d3.select("body")
-        .select("#dayCount")
-        .text("Day 1")
-        */
-       
-    //////////////////////////////////////////////////
+ 
     
     var screen = {width:400, height:500}
     var margins = {top:10,right:50,bottom:50,left:50}
     
     var setup = function(data)
-    {
-                
-       
+    {        
+     
     d3.select("svg")
     .attr("width",screen.width)
     .attr("height",screen.height)
@@ -123,40 +56,48 @@ var ev = function(data)
         .attr("transform","translate(25,"+margins.top+")")
         .call(yAxis)
     
-    //drawLegend(data,cScale);
-    drawArray(data,xScale,yScale);
+        
+     d3.select("body")
+        .selectAll("button")
+        .data(data)
+        .enter()
+        .append("button")
+        .on("click",function(penguin, position)
+           {
+         drawArray(data, xScale, yScale, position)
+     })
+      .append("img")
+        .attr("src", function(data)
+             {
+         return "penguins/" +data.picture   //return pic
+     })
+        
+  d3.select("#graph") 
+       .selectAll("circle")
+       .data(data[0].quizes.map(function(d) { return d.grade}))
+       .enter()
+       .append("circle")
+  
+    drawArray(data,xScale,yScale,0);
     
 }
     
-   var drawArray = function(data,xScale,yScale)
-    {
-         var arrays = d3.select("#graph")
-    .selectAll("g")
-    .data(data)
-    .enter()
-    .append("g")
-    .attr("fill", "none")
-    .attr("stroke", "gray")      
-    .attr("stroke-width", 1)
-      
+   var drawArray = function(data,xScale,yScale, index)
+    { 
        var arrays = d3.select("#graph") 
        .selectAll("circle")
-       .data(data)
-       .enter()
-       .append("circle")
+       .data(data[index].quizes.map(function(d) { return d.grade}))
+    //  .enter()
+    //   .append("circle")
+       .transition()
        .attr("fill", "blue")
-        /*function(trash)
-             {
-           
-           return cScale(data) //change I think
-       }) */
+      
       .attr("cx",function(num,index)
         {
-           return xScale(index)  //change 
-       }) 
+           return xScale(index) })
        .attr("cy",function(num)
         {
-           return yScale(num) //change
+           return yScale(num) 
        })
        .attr("r", 7)
          
@@ -178,104 +119,11 @@ var ev = function(data)
         .attr("stroke", "gray")
         .attr("stroke-width", 1)
     })
-    */
-   
-/*
-//make a line
-var lineGenerator = d3.line()
-    .x(function(num,index){return xScale(index)})
-    .y(function(num){return yScale(num)})
-    .curve(d3.curveNatural)
-*/
-       
-       
-arrays.datum(function(obj)
-
-{
-    return obj.quizes.map(function(d){return d.grade;});
-})
     
-    .append("path")  
-    .attr("d", lineGenerator);
-    
-} 
-
-        
-        /*
-        d3.select("svg")
-        .selectAll("circle")
-        .data(points)
-        .enter()
-        .append("circle")
-        .attr("fill","blue")
-        .attr("cx",function(p){return xScale(p.x)})
-        .attr("cy",function(p){return yScale(p.y)})
-        .attr("r", 7)
-        .on("mouseover", function(d)
-           {
-                d3.select("body").select("#pen").text("Penguin: " + d.x)
-                d3.select("body").select("#quiz").text("Quiz Grade: " + d.y)
-            */
-       
       
-    
-  /*  //draws start graph
-    setup(pointsFunc(data,startDay));
-    var xScale = setup(pointsFunc(data,startDay)).xscale;
-    var yScale = setup(pointsFunc(data,startDay)).yscale;
-    drawGraph(pointsFunc(data,startDay),xScale,yScale);
-    
-    
-    //draws start graph
-    setup(pointsFunc(data,startDay));
-    var xScale = setup(pointsFunc(data,startDay)).xscale;
-    var yScale = setup(pointsFunc(data,startDay)).yscale;
-    drawGraph(pointsFunc(data,startDay),xScale,yScale);
-    
-    */
-    
-  /*  var prevButton = d3.select("#prev")
-        .on("click", function(d)
-            {
-                var numDay = trackDay(-1)
-
-                    d3.select("svg").selectAll("circle")
-                        .remove();    
-
-                    var displayDay = numDay + 1;
-
-                    var newPoints = pointsFunc(d,numDay)    
-
-                    setup(newPoints);
-                    var xScale = setup(newPoints).xscale;
-                    var yScale = setup(newPoints).yscale;
-                    drawGraph(newPoints,xScale,yScale);
-
-                    d3.select("#dayCount")
-                        .text("Day " + displayDay)
-            })
-    
-    
-    var nextButton = d3.select("#next")
-        .on("click", function(d)
-            {
-                var numDay = trackDay(1)
-           
-                    d3.select("svg").selectAll("circle")
-                        .remove(); 
-
-                    var displayDay = numDay + 1;
-
-                    var newPoints = pointsFunc(d,numDay)    
-
-                    setup(newPoints);
-                    var xScale = setup(newPoints).xscale;
-                    var yScale = setup(newPoints).yscale;
-                    drawGraph(newPoints,xScale,yScale);
-
-                    d3.select("#dayCount")
-                        .text("Day " + displayDay)
-            }) 
-            */
-
-
+    arrays.datum(function(obj)
+    {
+        return obj.quizes.map(function(d){return d.grade;});
+    })}
+*/
+       }
