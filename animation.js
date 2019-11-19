@@ -13,13 +13,14 @@ function(err)
         console.log("ERROR",err);
     })
  
-    
+    //for changes later if needed
+
     var screen = {width:600, height:600}
     var margins = {top:50,right:50,bottom:50,left:50}
     
     var setup = function(data)
     {        
-     
+     //creating svg (but don't forget to put in html
     d3.select("svg")
     .attr("width",screen.width)
     .attr("height",screen.height)
@@ -31,6 +32,8 @@ function(err)
     var width = screen.width - margins.left - margins.right;
     var height = screen.height - margins.top - margins.bottom;
     
+        
+     //scale    
     var xScale = d3.scaleLinear()
                     .domain([37,0])
                     .range([height,0])
@@ -44,6 +47,7 @@ function(err)
         .append("g")
         .classed("axis",true);
     
+        //make axis
     d3.select(".axis")
         .append("g")
         .attr("id","xAxis")
@@ -56,22 +60,23 @@ function(err)
         .attr("transform","translate(25,"+margins.top+")")
         .call(yAxis)
     
-        
+        //button
      d3.select("body")
         .selectAll("button")
         .data(data)
         .enter()
         .append("button")
-        .on("click",function(penguin, position)
+        .on("click",function(penguin, position) // position of where penguin is in array  ~ index
            {
-         drawArray(data, xScale, yScale, position)
+         drawArray(data, xScale, yScale, position) //now you need to add position since we called it up there 
      })
       .append("img")
-        .attr("src", function(data)
+        .attr("src", function(data) 
              {
-         return "penguins/" +data.picture   //return pic
+         return "penguins/" +data.picture   //return pic of penguin
      })
         
+        //put the stuff here from the draw 
   d3.select("#graph") 
        .selectAll("circle")
        .data(data[0].quizes.map(function(d) { return d.grade}))
@@ -92,14 +97,14 @@ function(err)
        .transition()
        .attr("fill", "blue")
       
-      .attr("cx",function(num,index)
+      .attr("cx",function(num,index) 
         {
            return xScale(index) })
        .attr("cy",function(num)
         {
            return yScale(num) 
        })
-       .attr("r", 7)
+       .attr("r", 5)
          
          
    /*      
